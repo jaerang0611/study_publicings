@@ -1,0 +1,246 @@
+{
+  "name": "11_send_email_forms",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "f244735d-3eb1-436d-a27f-ab1adfee264e",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        288
+      ],
+      "id": "04d6f9a3-251b-4b15-b5f8-4d5026a8680b",
+      "name": "Webhook",
+      "webhookId": "f244735d-3eb1-436d-a27f-ab1adfee264e"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['option gmail'] }}",
+        "subject": "N8N TEST] 11_send_email_forms",
+        "message": "={{ $('Webhook').item.json.query.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        896,
+        144
+      ],
+      "id": "7dce80d0-8240-467a-89a3-3c52ff27efa1",
+      "name": "Send a message",
+      "webhookId": "abdfc04f-0267-4b19-9700-12b8255f956a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nLGdnRjJ4niLgtOd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15PSi6M5ssF-wcTMlC5ifEzl42g7iFld8CxvGtQasJdI",
+          "mode": "list",
+          "cachedResultName": "Member_informations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15PSi6M5ssF-wcTMlC5ifEzl42g7iFld8CxvGtQasJdI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15PSi6M5ssF-wcTMlC5ifEzl42g7iFld8CxvGtQasJdI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        288
+      ],
+      "id": "0d91a511-1acf-4a91-97af-c1f5f2bd4700",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "echNP8Alks222kGi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        288
+      ],
+      "id": "afce768b-9faa-4fbb-a14d-39cd6e87cdb1",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        216
+      ],
+      "id": "702d0cbf-7a65-4c0d-8e88-21430cd3bf43"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e55f05c2-495d-48f3-bfbd-38bf7676d4cf",
+              "leftValue": "={{ $json['이름'] }}",
+              "rightValue": "유재랑",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "4d2da5ee-4338-49fe-9964-e00a19688002",
+              "leftValue": "={{ $json['이름'] }}",
+              "rightValue": "장근선",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "baa0a3d6-c2a3-49fe-b436-fcecd03dde07",
+              "leftValue": "={{ $json['이름'] }}",
+              "rightValue": "황선영",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        144
+      ],
+      "id": "ebd7f915-52e5-46ed-85c2-47b0760f2692",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false,
+    "timeSavedPerExecution": 1
+  },
+  "versionId": "cb85dec3-69ad-4788-9b01-79927863dbe8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6198a25c8b3ee94b2605754a4510211db94b4a5fdfdeeb2448117b3c80ea6672"
+  },
+  "id": "fcSmf52pHJOXM1C9",
+  "tags": []
+}
